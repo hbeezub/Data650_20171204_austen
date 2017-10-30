@@ -49,22 +49,24 @@
 \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
 \usepackage{alltt}
+\usepackage{natbib}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
+
 
 \title{Sense and Sensibility Wordcloud}
 \author{Charles Redmond}
 \maketitle
 
 \begin{abstract}
-In this article we construct a wordcloud, using the tidytext R package, for Jane Austin's Sense and Sensibility.
+In this article we construct a wordcloud, using the tidytext R package, for Jane Austen's Sense and Sensibility.
 
 \end{abstract}
 
-\textit{Sense and Sensibility} is a novel by Jane Austin, published in 1811. Below we construct a wordcloud for the most common words appearing in the novel.
+\textit{Sense and Sensibility} is a novel by Jane Austen, published in 1811\footnote{The novel was published anonymously.}. Below we construct a wordcloud for the most common words appearing in the novel.
 
-\section{The Jane Austin Package}
-There is a relatively new package for R, janeaustenr, that gives one access to all of the novels written by Jane Austin.  One first has to install this package and bring it in with library.  You may then call the following function and store the result.  The result will be a data frame.
+\section{The Jane Austen Package}
+There is a relatively new package for R, janeaustenr, that gives one access to all of the novels written by Jane Austen \citep{Silge}.  One first has to install this package and bring it in with library.  You may then call the following function and store the result.  The result will be a data frame.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -185,5 +187,60 @@ We can remove common, unimportant words with the stop\_words data frame and some
 \end{kframe}
 \end{knitrout}
 
+Now, we need to calculate the frequencies of the words in the novel.  Again, we can use standard dplyr techniques for this:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{word_freq}\hlkwb{<-}\hlstd{words_df}\hlopt{%>%}
+  \hlkwd{group_by}\hlstd{(word)}\hlopt{%>%}
+  \hlkwd{summarize}\hlstd{(}\hlkwc{count}\hlstd{=}\hlkwd{n}\hlstd{())}
+
+\hlstd{word_freq}
+\end{alltt}
+\begin{verbatim}
+## # A tibble: 5,844 x 2
+##          word count
+##         <chr> <int>
+##  1          1     1
+##  2        200     1
+##  3      7000l     1
+##  4  abandoned     1
+##  5  abatement     1
+##  6  abbeyland     1
+##  7      abhor     1
+##  8   abhorred     2
+##  9 abhorrence     4
+## 10  abilities     9
+## # ... with 5,834 more rows
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Finally, it's time to generate the wordcloud:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(wordcloud)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: RColorBrewer}}\begin{alltt}
+\hlkwd{library}\hlstd{(tm)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: NLP}}\begin{alltt}
+\hlkwd{wordcloud}\hlstd{(word_freq}\hlopt{$}\hlstd{word,word_freq}\hlopt{$}\hlstd{count,}\hlkwc{min.freq}\hlstd{=}\hlnum{25}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-8-1} 
+
+\end{knitrout}
+
+\bibliographystyle{apa}
+\bibliography{article}
+\nocite{*}
 
 \end{document}
