@@ -1,7 +1,14 @@
 \documentclass{article}
 \usepackage{natbib}
 
+<<echo=FALSE>>=
+packages<-c('dplyr','stringr','tidytext','wordcloud','tm','janeaustenr')
+knitr::write_bib(packages,file='packages.bib')
+@
+
+
 \begin{document}
+
 
 
 \title{Sense and Sensibility Wordcloud}
@@ -83,14 +90,14 @@ word_freq
 
 Finally, it's time to generate the wordcloud:
 
-<<>>=
+<<message=FALSE,warning=FALSE>>=
 library(wordcloud)
 library(tm)
 wordcloud(word_freq$word,word_freq$count,min.freq=25)
 @
 
 \bibliographystyle{apa}
-\bibliography{article}
+\bibliography{article,packages}
 \nocite{*}
 
 \end{document}
